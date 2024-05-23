@@ -30,8 +30,8 @@ typedef struct s_data
 	t_philosopher	*first_philo;
 	t_philosopher	*last_philo;
 	int				forks_number;
-	int				*first_fork;
-	int				*last_fork;
+	t_fork			*first_fork;
+	t_fork			*last_fork;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -48,11 +48,20 @@ typedef struct s_philospher
 	int				number;
 	int				state;
 	int				fork_held;
-	int				*right_fork;
-	int				*left_fork;
+	t_fork			*right_fork;
+	t_fork			*left_fork;
 	t_philosopher	*right_philo;
 	t_philosopher	*left_philo;
 	int				spagh_eaten;
 }					t_philosopher;
+
+typedef struct s_fork
+{
+	t_philosopher	*owner;
+	t_fork			*next;
+	t_fork			*prev;
+	int				picked;
+	pthread_mutex_t	*fork_state;
+}					t_fork;
 
 #endif
