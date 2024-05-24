@@ -24,12 +24,6 @@ typedef struct s_data		t_data;
 typedef struct s_philospher	t_philo;
 typedef struct s_fork		t_fork;
 
-typedef struct s_current
-{
-	t_data					*data;
-	t_philo					*philo;
-}							t_current;
-
 /* first_fork is the fork to the right of the first philosopher
 last_fork is the fork to the left of the first philosopher
 last_fork is the fork to the right of the first philosopher if there is only one philosopher

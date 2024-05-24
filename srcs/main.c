@@ -11,21 +11,34 @@
 /* ************************************************************************** */
 #include "../philosophers.h"
 
+int	is_dead(t_philo *philo)
+{
+	if (philo->state == 0)
+		return (1);
+	return (0);
+}
+
 void	*ft_routine(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
+
 	philo = (t_philo *)arg;
-	if (philo)
+	while (!is_dead(philo))
 	{
 		printf("%d\n", philo->number);
+		if (philo->number == 6)
+		{
+			if (philo->number == 6)
+				philo->state = 0;
+		}
 	}
 }
 
 int	main(int argc, char *argv[])
 {
-	t_data		data;
-	t_philo		*philo;
-	int			i;
+	t_data	data;
+	t_philo	*philo;
+	int		i;
 
 	i = 0;
 	if (argc == 5 || argc == 6)
@@ -37,13 +50,14 @@ int	main(int argc, char *argv[])
 		while (i < data.philosophers)
 		{
 			pthread_create(philo->thread, NULL, ft_routine, (void *)philo);
+			pthread_mutex_init(philo->right_fork->fork_state, NULL);
 			philo = philo->right_philo;
 			i++;
 		}
-		ft_freedata(&data);
 	}
 	else
 		write(2, "Error: Invalid input\n", 22);
+	ft_freedata(&data);
 	return (0);
 }
 

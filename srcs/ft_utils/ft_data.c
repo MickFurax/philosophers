@@ -47,6 +47,7 @@ void	ft_freedata(t_data *data)
 		temp = data->first_philo;
 		data->first_philo = data->first_philo->right_philo;
 		pthread_join(*(temp->thread), NULL);
+		free(temp->right_fork->fork_state);
 		free(temp->thread);
 		free(temp->right_fork);
 		free(temp);
