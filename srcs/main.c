@@ -9,23 +9,61 @@
 /*   Updated: 2024/05/20 11:00:25 by arabeman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-# include <pthread.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/time.h>
-# include <unistd.h>
+#include "../philosophers.h"
 
-void *routine(void *arg)
+void	*ft_routine(void *arg)
 {
-	__uint64_t number = (__uint64_t)arg;
-	printf("%ld\n", number);
+	t_philo *philo;
+	philo = (t_philo *)arg;
+	if (philo)
+	{
+		printf("%d\n", philo->number);
+	}
 }
 
-int	main(void)
+int	main(int argc, char *argv[])
 {
-	pthread_t philo;
-	pthread_create(&philo, NULL, routine, (void *)1);
-	pthread_join(philo, NULL);
+	t_data		data;
+	t_philo		*philo;
+	int			i;
+
+	i = 0;
+	if (argc == 5 || argc == 6)
+	{
+		if (argc == 6)
+			data.times_each_philosopher_must_eat = atoi(argv[5]);
+		ft_initdata(&data, argv);
+		philo = data.first_philo;
+		while (i < data.philosophers)
+		{
+			pthread_create(philo->thread, NULL, ft_routine, (void *)philo);
+			philo = philo->right_philo;
+			i++;
+		}
+		ft_freedata(&data);
+	}
+	else
+		write(2, "Error: Invalid input\n", 22);
 	return (0);
 }
+
+/* void	*routine(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	printf("%d\n", philo->number);
+} */
+
+/* int	main(void)
+{
+	t_philo *philo;
+	philo = ft_newphilo(1);
+	if (!philo)
+		return (1);
+	pthread_create(philo->thread, NULL, routine, (void *)philo);
+	pthread_join(*(philo->thread), NULL);
+	free(philo->thread);
+	free(philo);
+	return (0);
+} */

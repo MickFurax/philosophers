@@ -1,17 +1,18 @@
 #include "../../philosophers.h"
 
-t_philosopher	*ft_newphilo(int number)
+t_philo	*ft_newphilo(int number)
 {
-	t_philosopher	*philo;
-	pthread_t		thread;
+	t_philo	*philo;
+	pthread_t		*thread;
 
-	philo = malloc(sizeof(t_philosopher));
+	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
-	philo->thread = thread;
+	philo->thread = malloc(sizeof(pthread_t));
+	if (!philo->thread)
+		return (free(philo), NULL);
 	philo->number = number;
 	philo->state = -1;
-	philo->fork_held = 0;
 	philo->right_fork = NULL;
 	philo->left_fork = NULL;
 	philo->right_philo = NULL;
@@ -20,7 +21,7 @@ t_philosopher	*ft_newphilo(int number)
 	return (philo);
 }
 
-t_fork	*ft_newfork(t_philosopher *owner)
+t_fork	*ft_newfork(t_philo *owner)
 {
 	t_fork	*fork;
 
@@ -28,7 +29,5 @@ t_fork	*ft_newfork(t_philosopher *owner)
 	if (!fork)
 		return (NULL);
 	fork->owner = owner;
-	fork->next = NULL;
-	fork->prev = NULL;
 	fork->picked = 0;
 }
