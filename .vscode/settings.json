@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "pthread.h": "c",
-        "philosophers.h": "c"
-    }
+        "philosophers.h": "c",
+        "time.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

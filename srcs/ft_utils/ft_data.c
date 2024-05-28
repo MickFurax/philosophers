@@ -2,55 +2,57 @@
 
 void	ft_createphilos(t_data *data, char *argv[])
 {
-	t_philo	*philo;
-	t_philo	*temp;
-	int		i;
+	int	i;
 
-	philo = NULL;
-	i = 1;
-	while (i <= data->philosophers)
+	i = 0;
+	data->philos = malloc(sizeof(t_philo *) * data->philosophers);
+	if (!data->philos)
+		return ;
+	while (i < data->philosophers)
 	{
-		ft_addphilo(&philo, ft_newphilo(i));
-		i++;
-	}
-	data->first_philo = philo;
-	data->last_philo = ft_lastphilo(philo);
-	i = 1;
-	temp = philo;
-	while (i <= data->philosophers)
-	{
-		philo->data = *data;
-		philo = philo->right_philo;
+		data->philos[i] = ft_newphilo(i + 1);
+		data->philos[i]->data = data;
 		i++;
 	}
 }
 
 void	ft_initdata(t_data *data, char *argv[])
 {
+	char	*forks;
+
 	data->philosophers = atoi(argv[1]);
 	ft_createphilos(data, argv);
-	data->first_fork = data->first_philo->right_fork;
-	data->last_fork = data->first_philo->left_fork;
+	pthread_mutex_init(&data->data_mutex, NULL);
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
+	data->times_each_philosopher_must_eat = -1;
+	forks = malloc(sizeof(int) * data->philosophers);
+	if (!forks)
+		return ;
+	data->forks = forks;
+	memset(forks, '1', sizeof(char) * data->philosophers);
 }
 
+// Join aloha
 void	ft_freedata(t_data *data)
 {
-	t_philo *temp;
 	int i;
 
 	i = 0;
 	while (i < data->philosophers)
 	{
-		temp = data->first_philo;
-		data->first_philo = data->first_philo->right_philo;
-		pthread_join(*(temp->thread), NULL);
-		free(temp->right_fork->fork_state);
-		free(temp->thread);
-		free(temp->right_fork);
-		free(temp);
+		pthread_join(data->philos[i]->thread, NULL);
 		i++;
 	}
+	i = 0;
+	while (i < data->philosophers)
+	{
+		pthread_mutex_destroy(&data->philos[i]->philo_mutex);
+		free(data->philos[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&data->data_mutex);
+	free(data->philos);
+	free(data->forks);
 }

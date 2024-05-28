@@ -11,62 +11,26 @@
 /* ************************************************************************** */
 #include "../philosophers.h"
 
-int	no_died(t_data *data)
+int	is_dead(t_philo *philo)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->philosophers)
-	{
-		if (data->philos[i]->state == 0)
-			return (0);
-		i++;
-	}
-	return (1);
+	if (philo->state == 0)
+		return (1);
+	return (0);
 }
-
-// void	ft_takeforks(t_philo *philo, t_data *data)
-// {
-// 	char	*forks;
-// 	int		index;
-
-// 	forks = data->forks;
-// 	index = philo->number - 1;
-// 	if (forks[index] - 48 == 1)
-// 	{
-// 		forks[index] = '0';
-// 		printf("%d has taken a fork\n", philo->number);
-// 		printf("%s\n", forks);
-// 	}
-// 	if (forks[index - 1] - 48 == 1)
-// 	{
-// 		forks[index - 1] = '0';
-// 		printf("%d has taken a fork\n", philo->number);
-// 	}
-// }
 
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
-	t_data	*data;
 
 	philo = (t_philo *)arg;
-	data = philo->data;
-	while (no_died(data))
+	while (!is_dead(philo))
 	{
-		pthread_mutex_lock(&philo->philo_mutex);
-		// printf("%s\n", data->forks);
-		// if (philo->state == -1)
-		// ft_takeforks(philo, data);
+		printf("%d\n", philo->number);
 		if (philo->number == 6)
 		{
-			philo->state = 0;
-			printf("Someone died\n");
-			break ;
+			if (philo->number == 6)
+				philo->state = 0;
 		}
-		printf("%c\n", data->forks[0]);
-		(void)data;
-		pthread_mutex_unlock(&philo->philo_mutex);
 	}
 }
 
@@ -79,20 +43,41 @@ int	main(int argc, char *argv[])
 	i = 0;
 	if (argc == 5 || argc == 6)
 	{
-		ft_initdata(&data, argv);
 		if (argc == 6)
 			data.times_each_philosopher_must_eat = atoi(argv[5]);
+		ft_initdata(&data, argv);
+		philo = data.first_philo;
 		while (i < data.philosophers)
 		{
-			philo = data.philos[i];
-			pthread_create(&philo->thread, NULL, ft_routine, (void *)philo);
+			pthread_create(philo->thread, NULL, ft_routine, (void *)philo);
+			pthread_mutex_init(philo->right_fork->fork_state, NULL);
+			philo = philo->right_philo;
 			i++;
 		}
-		ft_freedata(&data);
 	}
 	else
 		write(2, "Error: Invalid input\n", 22);
+	ft_freedata(&data);
 	return (0);
 }
 
-// To do: when argv[5] is invalid
+/* void	*routine(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	printf("%d\n", philo->number);
+} */
+
+/* int	main(void)
+{
+	t_philo *philo;
+	philo = ft_newphilo(1);
+	if (!philo)
+		return (1);
+	pthread_create(philo->thread, NULL, routine, (void *)philo);
+	pthread_join(*(philo->thread), NULL);
+	free(philo->thread);
+	free(philo);
+	return (0);
+} */
