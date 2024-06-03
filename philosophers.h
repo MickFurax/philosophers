@@ -27,7 +27,7 @@ typedef struct s_data
 {
 	int					philosophers;
 	t_philo				**philos;
-	char				*forks;
+	t_philo				**forks;
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
@@ -45,15 +45,26 @@ typedef struct s_philo
 	int					number;
 	int					state;
 	int					spagh_eaten;
+	int					fork_held;
 	t_data				*data;
 	pthread_mutex_t		philo_mutex;
 }						t_philo;
 
-t_philo					*ft_newphilo(int number);
-// t_fork						*ft_newfork(t_philo *owner);
+typedef struct s_fork
+{
+	int					number;
+	int					state;
+	pthread_mutex_t		fork_mutex;
+}						t_fork;
 
-void					ft_createphilos(t_data *data, char *argv[]);
+t_philo					*ft_newphilo(int number);
+
+void					ft_createphilos(t_data *data);
 void					ft_initdata(t_data *data, char *argv[]);
 void					ft_freedata(t_data *data);
+
+t_fork					*ft_newfork(int number);
+void					ft_takerightfork(t_data *data, t_philo *philo);
+void					ft_takeleftfork(t_data *data, t_philo *philo);
 
 #endif

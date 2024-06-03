@@ -25,26 +25,6 @@ int	no_died(t_data *data)
 	return (1);
 }
 
-// void	ft_takeforks(t_philo *philo, t_data *data)
-// {
-// 	char	*forks;
-// 	int		index;
-
-// 	forks = data->forks;
-// 	index = philo->number - 1;
-// 	if (forks[index] - 48 == 1)
-// 	{
-// 		forks[index] = '0';
-// 		printf("%d has taken a fork\n", philo->number);
-// 		printf("%s\n", forks);
-// 	}
-// 	if (forks[index - 1] - 48 == 1)
-// 	{
-// 		forks[index - 1] = '0';
-// 		printf("%d has taken a fork\n", philo->number);
-// 	}
-// }
-
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
@@ -52,21 +32,9 @@ void	*ft_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	while (no_died(data))
+	while (1)
 	{
-		pthread_mutex_lock(&philo->philo_mutex);
-		// printf("%s\n", data->forks);
-		// if (philo->state == -1)
-		// ft_takeforks(philo, data);
-		if (philo->number == 6)
-		{
-			philo->state = 0;
-			printf("Someone died\n");
-			break ;
-		}
-		printf("%c\n", data->forks[0]);
-		(void)data;
-		pthread_mutex_unlock(&philo->philo_mutex);
+		break;
 	}
 }
 

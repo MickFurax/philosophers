@@ -3,18 +3,17 @@
 t_philo	*ft_newphilo(int number)
 {
 	t_philo			*philo;
-	pthread_t		thread;
 	pthread_mutex_t	mutex;
-
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
 	philo->number = number;
 	philo->state = -1;
 	philo->spagh_eaten = 0;
-	philo->thread = thread;
+	philo->fork_held = 0;
+	philo->thread = 0;
+	pthread_mutex_init(&mutex, NULL);
 	philo->philo_mutex = mutex;
-	pthread_mutex_init(&philo->philo_mutex, NULL);
 	return (philo);
 }
 
