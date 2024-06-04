@@ -45,10 +45,11 @@ typedef struct s_philo
 	int					state;
 	int					spagh_eaten;
 	int					fork_held;
+	int					priority_level;
 	t_data				*data;
 	pthread_mutex_t		*rfork;
 	pthread_mutex_t		*lfork;
-	pthread_mutex_t 		philo_mutex;
+	pthread_mutex_t		philo_mutex;
 
 }						t_philo;
 

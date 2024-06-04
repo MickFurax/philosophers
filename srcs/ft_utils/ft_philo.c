@@ -3,7 +3,6 @@
 t_philo	*ft_newphilo(int number)
 {
 	t_philo			*philo;
-	pthread_mutex_t rfork;
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
@@ -12,8 +11,11 @@ t_philo	*ft_newphilo(int number)
 	philo->spagh_eaten = 0;
 	philo->fork_held = 0;
 	philo->thread = 0;
-	pthread_mutex_init(&rfork, NULL);
-	philo->rfork = &rfork;
+	philo->rfork = malloc(sizeof(pthread_mutex_t));
+	if (!philo->rfork)
+		return (NULL);
+	pthread_mutex_init(philo->rfork, NULL);
+	philo->lfork = NULL;
 	return (philo);
 }
 

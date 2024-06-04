@@ -19,7 +19,8 @@ void	ft_createphilos(t_data *data)
 	while (i < data->philosophers)
 	{
 		if (i == 0)
-			data->philos[i]->lfork = data->philos[data->philosophers - 1]->rfork;
+			data->philos[i]->lfork = data->philos[data->philosophers
+				- 1]->rfork;
 		else
 			data->philos[i]->lfork = data->philos[i - 1]->rfork;
 		i++;
@@ -52,6 +53,8 @@ void	ft_freedata(t_data *data)
 	while (i < data->philosophers)
 	{
 		pthread_mutex_destroy(&data->philos[i]->philo_mutex);
+		pthread_mutex_destroy(data->philos[i]->rfork);
+		free(data->philos[i]->rfork);
 		free(data->philos[i]);
 		i++;
 	}
