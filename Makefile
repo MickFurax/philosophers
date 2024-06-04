@@ -14,7 +14,6 @@ TEST_FLAGS  := -fsanitize=thread
 SRCS        :=      srcs/ft_utils/ft_philo.c \
                           srcs/ft_utils/ft_action.c \
                           srcs/ft_utils/ft_data.c \
-                          srcs/ft_utils/ft_fork.c \
                           srcs/main.c \
                           
 OBJS        := $(SRCS:.c=.o)

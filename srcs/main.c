@@ -28,18 +28,13 @@ int	no_died(t_data *data)
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
-	t_data	*data;
+	// t_data	*data;
 
 	philo = (t_philo *)arg;
-	data = philo->data;
+	// data = philo->data;
 	while (1)
 	{
-		// pthread_mutex_lock(&data->data_mutex);
-		ft_takerightfork(data, philo);
-		// pthread_mutex_unlock(&data->data_mutex);
-		// pthread_mutex_lock(&data->data_mutex);
-		ft_takeleftfork(data, philo);
-		// pthread_mutex_unlock(&data->data_mutex);
+		printf("%d\n", philo->number);
 		break ;
 	}
 	return (0);
