@@ -34,8 +34,15 @@ void	*ft_routine(void *arg)
 	data = philo->data;
 	while (1)
 	{
-		break;
+		// pthread_mutex_lock(&data->data_mutex);
+		ft_takerightfork(data, philo);
+		// pthread_mutex_unlock(&data->data_mutex);
+		// pthread_mutex_lock(&data->data_mutex);
+		ft_takeleftfork(data, philo);
+		// pthread_mutex_unlock(&data->data_mutex);
+		break ;
 	}
+	return (0);
 }
 
 int	main(int argc, char *argv[])

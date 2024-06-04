@@ -22,19 +22,26 @@
 
 typedef struct s_data	t_data;
 typedef struct s_philo	t_philo;
+typedef struct s_fork	t_fork;
 
 typedef struct s_data
 {
 	int					philosophers;
 	t_philo				**philos;
-	t_philo				**forks;
+	t_fork				**forks;
 	int					time_to_die;
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					times_each_philosopher_must_eat;
 	pthread_mutex_t		data_mutex;
 }						t_data;
+typedef struct s_fork
 
+{
+	int					number;
+	int					state;
+	pthread_mutex_t		fork_mutex;
+}						t_fork;
 /* state
 0: dead
 1: thinking
@@ -50,12 +57,7 @@ typedef struct s_philo
 	pthread_mutex_t		philo_mutex;
 }						t_philo;
 
-typedef struct s_fork
-{
-	int					number;
-	int					state;
-	pthread_mutex_t		fork_mutex;
-}						t_fork;
+
 
 t_philo					*ft_newphilo(int number);
 

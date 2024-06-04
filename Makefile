@@ -1,15 +1,12 @@
-#  |  |  ___ \    \  |         |
-#  |  |     ) |  |\/ |   _  |  |  /   _ 
-# ___ __|  __/   |   |  (   |    <    __/ 
-#    _|  _____| _|  _| \__,_| _|\_\ \___|
-#                              by jcluzet
 ################################################################################
 #                                     CONFIG                                   #
 ################################################################################
 
 NAME        := philosopher
-CC        := cc
-FLAGS    := -Wall -Wextra -Werror 
+CC          := cc
+FLAGS       := -Wall -Wextra -Werror
+TEST_FLAGS  := -fsanitize=thread
+
 ################################################################################
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
@@ -29,7 +26,6 @@ OBJS        := $(SRCS:.c=.o)
 #                                  Makefile  objs                              #
 ################################################################################
 
-
 CLR_RMV		:= \033[0m
 RED		    := \033[1;31m
 GREEN		:= \033[1;32m
@@ -41,14 +37,19 @@ RM		    := rm -f
 ${NAME}:	${OBJS}
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
 			${CC} ${FLAGS} -o ${NAME} ${OBJS}
-			@echo "$(GREEN)$(NAME) created[0m ✔️"
+			@echo "$(GREEN)$(NAME) created$(CLR_RMV) ✔️"
 
-all:		${NAME}
+all:		${NAME} test
+
+test:       clean
+			@echo "$(GREEN)Compilation for testing with ${TEST_FLAGS} $(CLR_RMV)..."
+			${CC} ${FLAGS} ${TEST_FLAGS} -o ${NAME}_test ${SRCS}
+			@echo "$(GREEN)${NAME}_test created$(CLR_RMV) ✔️"
 
 bonus:		all
 
 clean:
-			@ ${RM} *.o */*.o */*/*.o
+			@ ${RM} *.o */*.o */*/*.o ${NAME}_test
 			@ echo "$(RED)Deleting $(CYAN)$(NAME) $(CLR_RMV)objs ✔️"
 
 fclean:		clean
@@ -57,6 +58,4 @@ fclean:		clean
 
 re:			fclean all
 
-.PHONY:		all clean fclean re
-
-
+.PHONY:		all clean fclean re test

@@ -7,8 +7,8 @@ t_fork	*ft_newfork(int number)
 
 	fork = malloc(sizeof(t_fork));
 	if (!fork)
-		return ;
-	fork->number = philo->number;
+		return (NULL);
+	fork->number = number;
 	fork->state = 1;
 	pthread_mutex_init(&mutex, NULL);
 	fork->fork_mutex = mutex;
@@ -17,32 +17,36 @@ t_fork	*ft_newfork(int number)
 
 void	ft_takerightfork(t_data *data, t_philo *philo)
 {
-	char	*forks;
+	t_fork	**forks;
 	int		index;
 
 	index = philo->number - 1;
 	forks = data->forks;
-	if (forks[index] - 48 == 1)
+	if (forks[index]->state == 1)
 	{
-		forks[index] = '0';
+		pthread_mutex_lock(&forks[index]->fork_mutex);
+		forks[index]->state = 0;
 		printf("%d takes a fork at his right\n", philo->number);
 		philo->fork_held += 1;
+		pthread_mutex_unlock(&forks[index]->fork_mutex);
 	}
 }
 
 void	ft_takeleftfork(t_data *data, t_philo *philo)
 {
-	char	*forks;
+	t_fork	**forks;
 	int		index;
 
 	index = philo->number - 1;
 	forks = data->forks;
 	if (index == 0)
 		index = data->philosophers - 1;
-	if (forks[index] - 48 == 1)
+	if (forks[index]->state == 1)
 	{
-		forks[index] = '0';
+		pthread_mutex_lock(&forks[index]->fork_mutex);
+		forks[index]->state = 0;
 		printf("%d takes a fork at his left\n", philo->number);
 		philo->fork_held += 1;
+		pthread_mutex_unlock(&forks[index]->fork_mutex);
 	}
 }
