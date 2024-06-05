@@ -6,37 +6,29 @@
 /*   By: arabeman <arabeman@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:00:23 by arabeman          #+#    #+#             */
-/*   Updated: 2024/05/20 11:00:25 by arabeman         ###   ########.fr       */
+/*   Updated: 2024/06/05 09:24:06 by arabeman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../philosophers.h"
 
-int	no_died(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->philosophers)
-	{
-		if (data->philos[i]->state == 0)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
-	// t_data	*data;
+	t_data	*data;
 
 	philo = (t_philo *)arg;
-	// data = philo->data;
-	while (1)
+	data = philo->data;
+	if (data->philosophers)
 	{
-		printf("%d\n", philo->number);
-		break ;
+		/* code */
 	}
+	// pthread_mutex_lock(&data->data_mutex);
+	// if (data->start != 0)
+	// {
+	// 	ft_sleep(100);
+	// 	printf("time: %ld\n", get_time() - data->start);
+	// }
+	// pthread_mutex_unlock(&data->data_mutex);
 	return (0);
 }
 

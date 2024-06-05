@@ -31,6 +31,8 @@ typedef struct s_data
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					times_each_philosopher_must_eat;
+	int					philo_ready;
+	size_t				start;
 	pthread_mutex_t		data_mutex;
 }						t_data;
 
@@ -45,19 +47,25 @@ typedef struct s_philo
 	int					state;
 	int					spagh_eaten;
 	int					fork_held;
-	int					priority_level;
+	size_t				last_meal;
 	t_data				*data;
 	pthread_mutex_t		*rfork;
 	pthread_mutex_t		*lfork;
 	pthread_mutex_t		philo_mutex;
-
 }						t_philo;
 
 t_philo					*ft_newphilo(int number);
+t_philo					*get_priority(t_data *data);
 
 void					ft_createphilos(t_data *data);
 void					ft_initdata(t_data *data, char *argv[]);
 void					ft_freedata(t_data *data);
+
+size_t					get_time(void);
+void					ft_sleep(size_t time);
+void					ft_getstart(t_data *data);
+
+void					eat(t_philo *philo);
 
 void					ft_takerightfork(t_data *data, t_philo *philo);
 void					ft_takeleftfork(t_data *data, t_philo *philo);

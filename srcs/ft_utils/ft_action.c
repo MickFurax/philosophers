@@ -1,13 +1,11 @@
-/* #include "../../philosophers.h"
+#include "../../philosophers.h"
 
-void ft_takeforks(t_philo *philo)
+/* void eat(t_philo *philo)
 {
-    t_fork *fork;
-
-    fork = philo->right_fork;
-    if (!(fork->picked))
-    {
-        pthread_m
-    }
-    
+    pthread_mutex_lock(&philo->data->data_mutex);
+    philo->state = 2;
+    philo->last_meal = get_time();
+    printf("%ld %d is eating\n", get_time() - philo->data->start, philo->number);
+    pthread_mutex_unlock(&philo->data->data_mutex);
+    ft_sleep(philo->data->time_to_eat);
 } */

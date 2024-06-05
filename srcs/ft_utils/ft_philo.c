@@ -16,7 +16,31 @@ t_philo	*ft_newphilo(int number)
 		return (NULL);
 	pthread_mutex_init(philo->rfork, NULL);
 	philo->lfork = NULL;
+	philo->last_meal = 0;
 	return (philo);
+}
+
+t_philo *get_priority(t_data *data)
+{
+	int i;
+	t_philo *further_meal;
+
+	i = 0;
+	further_meal = data->philos[0];
+	while (i < data->philosophers)
+	{
+		if (further_meal->last_meal > data->philos[i]->last_meal)
+			further_meal = data->philos[i];
+		i++;
+	}
+	i = 0;
+	while (i < data->philosophers)
+	{
+		if (further_meal->spagh_eaten > data->philos[i]->spagh_eaten)
+			further_meal = data->philos[i];
+		i++;
+	}
+	return (further_meal);
 }
 
 /* void	ft_addphilo(t_philo **philos, t_philo *newphilo)

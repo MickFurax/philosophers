@@ -23,7 +23,7 @@ void	ft_createphilos(t_data *data)
 				- 1]->rfork;
 		else
 			data->philos[i]->lfork = data->philos[i - 1]->rfork;
-		i++;
+		i++;                                                                                         
 	}
 }
 
@@ -31,16 +31,22 @@ void	ft_initdata(t_data *data, char *argv[])
 {
 	data->philosophers = atoi(argv[1]);
 	ft_createphilos(data);
-	pthread_mutex_init(&data->data_mutex, NULL);
+	if (pthread_mutex_init(&data->data_mutex, NULL) != 0)
+	{
+		printf("Mutex init failed\n");
+		exit(1);
+	}
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
 	data->times_each_philosopher_must_eat = -1;
+	data->philo_ready = 0;
+	data->start = 0;
 }
 
 // Join aloha
 void	ft_freedata(t_data *data)
-{
+{ 	
 	int i;
 
 	i = 0;
