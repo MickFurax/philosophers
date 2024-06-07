@@ -23,7 +23,22 @@ void	ft_createphilos(t_data *data)
 				- 1]->rfork;
 		else
 			data->philos[i]->lfork = data->philos[i - 1]->rfork;
-		i++;                                                                                         
+		i++;
+	}
+}
+
+void	ft_initpriority(t_data *data)
+{
+	int	i;
+	int	start;
+
+	i = 0;
+	start = 1;
+	while (i < data->philosophers / 2)
+	{
+		data->priority[i] = start;
+		start += 2;
+		i++;
 	}
 }
 
@@ -42,11 +57,16 @@ void	ft_initdata(t_data *data, char *argv[])
 	data->times_each_philosopher_must_eat = -1;
 	data->philo_ready = 0;
 	data->start = 0;
+	data->no_dead = 1;
+	data->priority = malloc(sizeof(int) * (data->philosophers / 2));
+	if (!data->priority)
+		return ;
+	ft_initpriority(data);
 }
 
 // Join aloha
 void	ft_freedata(t_data *data)
-{ 	
+{
 	int i;
 
 	i = 0;
@@ -65,5 +85,6 @@ void	ft_freedata(t_data *data)
 		i++;
 	}
 	pthread_mutex_destroy(&data->data_mutex);
+	free(data->priority);
 	free(data->philos);
 }

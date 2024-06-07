@@ -2,7 +2,8 @@
 
 t_philo	*ft_newphilo(int number)
 {
-	t_philo			*philo;
+	t_philo	*philo;
+
 	philo = malloc(sizeof(t_philo));
 	if (!philo)
 		return (NULL);
@@ -20,27 +21,32 @@ t_philo	*ft_newphilo(int number)
 	return (philo);
 }
 
-t_philo *get_priority(t_data *data)
+void	get_priority(t_data *data)
 {
-	int i;
-	t_philo *further_meal;
+	int	i;
 
 	i = 0;
-	further_meal = data->philos[0];
-	while (i < data->philosophers)
+	while (i < data->philosophers / 2)
 	{
-		if (further_meal->last_meal > data->philos[i]->last_meal)
-			further_meal = data->philos[i];
+		data->priority[i] = data->priority[i] + 1;
+		if (data->priority[i] > data->philosophers)
+			data->priority[i] = 1;
 		i++;
 	}
+}
+
+int is_priority(t_data *data, t_philo *philo)
+{
+	int i;
+
 	i = 0;
 	while (i < data->philosophers)
 	{
-		if (further_meal->spagh_eaten > data->philos[i]->spagh_eaten)
-			further_meal = data->philos[i];
+		if (data->priority[i] == philo->number)
+			return (1);
 		i++;
 	}
-	return (further_meal);
+	return (0);
 }
 
 /* void	ft_addphilo(t_philo **philos, t_philo *newphilo)

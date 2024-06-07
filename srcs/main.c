@@ -11,24 +11,123 @@
 /* ************************************************************************** */
 #include "../philosophers.h"
 
+void	thinking(t_data *data, t_philo *philo)
+{
+	int	no_dead;
+
+	pthread_mutex_lock(&data->data_mutex);
+	no_dead = data->no_dead;
+	pthread_mutex_unlock(&data->data_mutex);
+	while (no_dead)
+	{
+		pthread_mutex_lock(&data->data_mutex);
+		if (is_priority(data, philo))
+		{
+			pthread_mutex_unlock(&data->data_mutex);
+			break ;
+		}
+		if (philo->state == -1)
+		{
+			printf("%ld %d is thinking\n", get_time() - data->start,
+				philo->number);
+			philo->last_meal = get_time();
+			philo->state = 1;
+		}
+		if (get_time() - philo->last_meal > (size_t)data->time_to_die
+			&& philo->state != 0)
+		{
+			printf("%ld %d is dead\n", get_time() - data->start, philo->number);
+			pthread_mutex_unlock(&data->data_mutex);
+			philo->state = 0;
+			no_dead = 0;
+			pthread_mutex_lock(&data->data_mutex);
+			data->no_dead = 0;
+			pthread_mutex_unlock(&data->data_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&data->data_mutex);
+	}
+}
+
+void	eating(t_data *data, t_philo *philo)
+{
+	pthread_mutex_lock(philo->rfork);
+	printf("%ld %d has taken a fork\n", get_time() - data->start,
+		philo->number);
+	philo->fork_held++;
+	pthread_mutex_lock(philo->lfork);
+	printf("%ld %d has taken a fork\n", get_time() - data->start,
+		philo->number);
+	philo->fork_held++;
+	if (philo->fork_held == 2)
+	{
+		printf("%ld %d is eating\n", get_time() - data->start, philo->number);
+		philo->state = 2;
+		ft_sleep(data->time_to_eat);
+	}
+	pthread_mutex_unlock(philo->lfork);
+	pthread_mutex_unlock(philo->rfork);
+}
+
+void	sleeping(t_data *data, t_philo *philo)
+{
+	printf("%ld %d is sleeping\n", get_time() - data->start, philo->number);
+	ft_sleep(data->time_to_sleep);
+	pthread_mutex_lock(&data->data_mutex);
+	if (get_time() - philo->last_meal > (size_t)data->time_to_die
+		&& philo->state != 0)
+	{
+		printf("%ld %d is dead\n", get_time() - data->start, philo->number);
+		data->no_dead = 0;
+		philo->state = 0;
+	}
+	else
+	{
+		printf("%ld %d is thinking\n", get_time() - data->start, philo->number);
+	}
+	pthread_mutex_unlock(&data->data_mutex);
+}
+
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
+	int		no_dead;
 	t_data	*data;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	if (data->philosophers)
+	pthread_mutex_lock(&data->data_mutex);
+	no_dead = data->no_dead;
+	pthread_mutex_unlock(&data->data_mutex);
+	ft_getstart(data);
+	while (1)
 	{
-		/* code */
+		pthread_mutex_lock(&data->data_mutex);
+		if (data->start != 0)
+		{
+			pthread_mutex_unlock(&data->data_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&data->data_mutex);
 	}
-	// pthread_mutex_lock(&data->data_mutex);
-	// if (data->start != 0)
-	// {
-	// 	ft_sleep(100);
-	// 	printf("time: %ld\n", get_time() - data->start);
-	// }
-	// pthread_mutex_unlock(&data->data_mutex);
+	while (philo->state && no_dead)
+	{
+		if (philo->state)
+		{
+			thinking(data, philo);
+		}
+		if (philo->state)
+		{
+			eating(data, philo);
+		}
+		if (philo->state)
+		{
+			sleeping(data, philo);
+		}
+		pthread_mutex_lock(&data->data_mutex);
+		get_priority(data);
+		pthread_mutex_unlock(&data->data_mutex);
+	}
 	return (0);
 }
 
