@@ -13,12 +13,7 @@
 
 void	thinking(t_data *data, t_philo *philo)
 {
-	int	no_dead;
-
-	pthread_mutex_lock(&data->data_mutex);
-	no_dead = data->no_dead;
-	pthread_mutex_unlock(&data->data_mutex);
-	while (no_dead)
+	while (1)
 	{
 		pthread_mutex_lock(&data->data_mutex);
 		if (is_priority(data, philo))
@@ -28,22 +23,10 @@ void	thinking(t_data *data, t_philo *philo)
 		}
 		if (philo->state == -1)
 		{
-			printf("%ld %d is thinking\n", get_time() - data->start,
-				philo->number);
 			philo->last_meal = get_time();
 			philo->state = 1;
-		}
-		if (get_time() - philo->last_meal > (size_t)data->time_to_die
-			&& philo->state != 0)
-		{
-			printf("%ld %d is dead\n", get_time() - data->start, philo->number);
-			pthread_mutex_unlock(&data->data_mutex);
-			philo->state = 0;
-			no_dead = 0;
-			pthread_mutex_lock(&data->data_mutex);
-			data->no_dead = 0;
-			pthread_mutex_unlock(&data->data_mutex);
-			break ;
+			printf("%ld %d is thinking\n", get_time() - data->start,
+				philo->number);
 		}
 		pthread_mutex_unlock(&data->data_mutex);
 	}
@@ -74,31 +57,17 @@ void	sleeping(t_data *data, t_philo *philo)
 	printf("%ld %d is sleeping\n", get_time() - data->start, philo->number);
 	ft_sleep(data->time_to_sleep);
 	pthread_mutex_lock(&data->data_mutex);
-	if (get_time() - philo->last_meal > (size_t)data->time_to_die
-		&& philo->state != 0)
-	{
-		printf("%ld %d is dead\n", get_time() - data->start, philo->number);
-		data->no_dead = 0;
-		philo->state = 0;
-	}
-	else
-	{
-		printf("%ld %d is thinking\n", get_time() - data->start, philo->number);
-	}
+	printf("%ld %d is thinking\n", get_time() - data->start, philo->number);
 	pthread_mutex_unlock(&data->data_mutex);
 }
 
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
-	int		no_dead;
 	t_data	*data;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	pthread_mutex_lock(&data->data_mutex);
-	no_dead = data->no_dead;
-	pthread_mutex_unlock(&data->data_mutex);
 	ft_getstart(data);
 	while (1)
 	{
@@ -110,20 +79,11 @@ void	*ft_routine(void *arg)
 		}
 		pthread_mutex_unlock(&data->data_mutex);
 	}
-	while (philo->state && no_dead)
+	while (1)
 	{
-		if (philo->state)
-		{
-			thinking(data, philo);
-		}
-		if (philo->state)
-		{
-			eating(data, philo);
-		}
-		if (philo->state)
-		{
-			sleeping(data, philo);
-		}
+		thinking(data, philo);
+		eating(data, philo);
+		sleeping(data, philo);
 		pthread_mutex_lock(&data->data_mutex);
 		get_priority(data);
 		pthread_mutex_unlock(&data->data_mutex);
