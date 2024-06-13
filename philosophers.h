@@ -32,7 +32,8 @@ typedef struct s_data
 	int					time_to_sleep;
 	int					times_each_philosopher_must_eat;
 	int					philo_ready;
-	int					no_dead;
+	int					finished_eating;
+	int					no_deaths;
 	int					*priority;
 	size_t				start;
 	pthread_mutex_t		data_mutex;
@@ -41,7 +42,8 @@ typedef struct s_data
 /* state
 0: dead
 1: thinking
-2: eating */
+2: eating
+3: sleeping */
 typedef struct s_philo
 {
 	pthread_t			thread;
@@ -65,6 +67,10 @@ void					ft_freedata(t_data *data);
 size_t					get_time(void);
 void					ft_sleep(size_t time);
 void					ft_getstart(t_data *data);
+
+void					thinking(t_data *data, t_philo *philo);
+void					eating(t_data *data, t_philo *philo);
+void					sleeping(t_data *data, t_philo *philo);
 
 void					get_priority(t_data *data);
 int						is_priority(t_data *data, t_philo *philo);

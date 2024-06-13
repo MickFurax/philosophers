@@ -1,0 +1,50 @@
+arabeman@c1r9s10 ~/C/philosophers-git (mutex_fork)> ./philosopher 8 400 200 200
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+This will not be printed when using valgrind. Why?
+0 8 is thinking
+0 7 has taken a fork
+0 7 has taken a fork
+0 7 is eating
+0 2 is thinking
+0 6 is thinking
+0 5 has taken a fork
+0 5 has taken a fork
+0 5 is eating
+0 4 is thinking
+0 1 has taken a fork
+0 1 has taken a fork
+0 1 is eating
+0 3 has taken a fork
+0 3 has taken a fork
+0 3 is eating
+200 7 is sleeping
+200 3 is sleeping
+200 5 is sleeping
+200 2 has taken a fork
+200 1 is sleeping
+200 4 has taken a fork
+200 4 has taken a fork
+200 4 is eating
+200 2 has taken a fork
+200 2 is eating
+200 8 has taken a fork
+200 8 has taken a fork
+200 8 is eating
+200 6 has taken a fork
+200 6 has taken a fork
+200 6 is eating
+^C⏎
+arabeman@c1r9s10 ~/C/philosophers-git (mutex_fork) [SIGINT]> valgrind ./philosopher 8 400 200 200                                                                                                                                                                                       arabeman@c1r9s10 ~/C/philosophers-git (mutex_fork) [SIGINT]> valgrind ./philosopher 8 400 200 200
+==325055== Memcheck, a memory error detector
+==325055== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==325055== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==325055== Command: ./philosopher 8 400 200 200
+==325055== 
+
+

@@ -15,6 +15,7 @@ SRCS        :=      srcs/ft_utils/ft_philo.c \
                           srcs/ft_utils/ft_action.c \
                           srcs/ft_utils/ft_data.c \
                           srcs/ft_utils/ft_time.c \
+                          srcs/ft_utils/ft_wait.c \
                           srcs/main.c \
                           
 OBJS        := $(SRCS:.c=.o)

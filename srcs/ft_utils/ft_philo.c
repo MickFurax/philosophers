@@ -35,12 +35,12 @@ void	get_priority(t_data *data)
 	}
 }
 
-int is_priority(t_data *data, t_philo *philo)
+int	is_priority(t_data *data, t_philo *philo)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (i < data->philosophers)
+	while (i < data->philosophers / 2)
 	{
 		if (data->priority[i] == philo->number)
 			return (1);
