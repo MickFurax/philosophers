@@ -2,14 +2,7 @@
 
 void	thinking(t_data *data, t_philo *philo)
 {
-	while (1)
-	{
 		pthread_mutex_lock(&data->data_mutex);
-		if (is_priority(data, philo))
-		{
-			pthread_mutex_unlock(&data->data_mutex);
-			break ;
-		}
 		if (philo->state == -1)
 		{
 			philo->last_meal = get_time();
@@ -18,7 +11,6 @@ void	thinking(t_data *data, t_philo *philo)
 				philo->number);
 		}
 		pthread_mutex_unlock(&data->data_mutex);
-	}
 }
 
 void	eating(t_data *data, t_philo *philo)
@@ -35,7 +27,9 @@ void	eating(t_data *data, t_philo *philo)
 	{
 		printf("%ld %d is eating\n", get_time() - data->start, philo->number);
 		philo->state = 2;
+		pthread_mutex_unlock(&data->data_mutex);
 		ft_sleep(data->time_to_eat);
+		pthread_mutex_lock(&data->data_mutex);
 	}
 	pthread_mutex_unlock(philo->lfork);
 	pthread_mutex_unlock(philo->rfork);

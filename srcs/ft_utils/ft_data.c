@@ -1,5 +1,7 @@
 #include "../../philosophers.h"
 
+//One fork per thread
+
 void	ft_createphilos(t_data *data)
 {
 	int	i;

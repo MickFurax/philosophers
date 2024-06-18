@@ -11,43 +11,65 @@
 /* ************************************************************************** */
 #include "../philosophers.h"
 
-void	ft_waitstart(t_data *data)
-{
-	while (1)
-	{
-		pthread_mutex_lock(&data->data_mutex);
-		if (data->start != 0)
-		{
-			pthread_mutex_unlock(&data->data_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&data->data_mutex);
-	}
-}
-
 void	*ft_routine(void *arg)
 {
 	t_philo	*philo;
 	t_data	*data;
+	int		priority;
+	int		time_to_eat;
+	int		time_to_sleep;
 
 	philo = (t_philo *)arg;
 	data = philo->data;
-	// ft_getstart(data);
-	// ft_waitstart(data);
+	priority = 0;
+	pthread_mutex_lock(&data->data_mutex);
+	time_to_eat = data->time_to_eat;
+	time_to_sleep = data->time_to_sleep;
+	pthread_mutex_unlock(&data->data_mutex);
 	while (1)
 	{
-		// thinking(data, philo);
-		// eating(data, philo);
-		// philo->state = 3;
-		// sleeping(data, philo);
 		pthread_mutex_lock(&data->data_mutex);
-		if (is_priority(data, philo))
-		{
-			printf("%d is priority\n", philo->number);
-			data->finished_eating++;
-		}
+		priority = is_priority(data, philo);
 		pthread_mutex_unlock(&data->data_mutex);
-		ft_sleep(200);
+		if (priority)
+		{
+			pthread_mutex_lock(philo->rfork);
+			printf("%ld %d has taken a fork\n", get_time() - data->start,
+				philo->number);
+			philo->fork_held++;
+			pthread_mutex_lock(philo->lfork);
+			printf("%ld %d has taken a fork\n", get_time() - data->start,
+				philo->number);
+			philo->fork_held++;
+			if (philo->fork_held == 2)
+			{
+				printf("\033[1;93m%ld %d is eating\033[0m\n", get_time()
+					- data->start, philo->number);
+				philo->state = 2;
+				ft_sleep(time_to_eat);
+				pthread_mutex_lock(&data->data_mutex);
+				data->finished_eating++;
+				pthread_mutex_lock(&philo->philo_mutex);
+				philo->last_meal = get_time();
+				pthread_mutex_unlock(&philo->philo_mutex);
+				pthread_mutex_unlock(&data->data_mutex);
+			}
+			pthread_mutex_unlock(philo->lfork);
+			philo->fork_held--;
+			pthread_mutex_unlock(philo->rfork);
+			philo->fork_held--;
+			priority = 0;
+			printf("\033[96m%ld %d is sleeping\033[0m\n", get_time() - data->start,
+				philo->number);
+			ft_sleep(time_to_sleep);
+			philo->state = -1;
+		}
+		else if (philo->state == -1)
+		{
+			printf("\033[1;32m%ld %d is thinking\033[0m\n", get_time()
+				- data->start, philo->number);
+			philo->state = 1;
+		}
 	}
 	return (0);
 }
@@ -74,10 +96,11 @@ int	main(int argc, char *argv[])
 		while (1)
 		{
 			pthread_mutex_lock(&data.data_mutex);
-			if (data.finished_eating == data.philosophers / 2)
+			if (data.finished_eating >= data.philosophers / 2)
 			{
 				data.finished_eating = 0;
 				get_priority(&data);
+				printf("Priority: %d %d\n", data.priority[0], data.priority[1]);
 				printf("\n");
 			}
 			pthread_mutex_unlock(&data.data_mutex);
