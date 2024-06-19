@@ -61,6 +61,7 @@ void	ft_initdata(t_data *data, char *argv[])
 	data->start = 0;
 	data->no_deaths = 1;
 	data->finished_eating = 0;
+	data->terminate = 1;
 	data->priority = malloc(sizeof(int) * (data->philosophers / 2));
 	if (!data->priority)
 		return ;
