@@ -1,6 +1,6 @@
 #include "../../philosophers.h"
 
-//One fork per thread
+// One fork per thread
 
 void	ft_createphilos(t_data *data)
 {
@@ -53,6 +53,7 @@ void	ft_initdata(t_data *data, char *argv[])
 		printf("Mutex init failed\n");
 		exit(1);
 	}
+
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
@@ -76,7 +77,8 @@ void	ft_freedata(t_data *data)
 	i = 0;
 	while (i < data->philosophers)
 	{
-		pthread_join(data->philos[i]->thread, NULL);
+		printf("pthread return (%d)\n", pthread_join(data->philos[i]->thread,
+				NULL));
 		i++;
 	}
 	i = 0;
